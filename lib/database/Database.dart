@@ -21,7 +21,7 @@ class Database {
           tasks: doc["tasks"],
           status: doc["status"],
           dateTime: doc["dateTime"],
-          contributorsIds: doc["contributorsIds"]
+          contributors: doc["contributors"]
         );
       }).toList();
     });
@@ -42,7 +42,7 @@ class Database {
           tasks: data["tasks"],
           status: data["status"],
           dateTime: data["dateTime"],
-          contributorsIds: data["contributorsIds"],
+          contributors: data["contributors"],
         );
       } else {
         return null;
@@ -62,7 +62,7 @@ class Database {
         "tasks": project.tasks,
         "status": project.status,
         "dateTime": project.dateTime,
-        "contributorsIds": project.contributorsIds,
+        "contributors": project.contributors,
       });
     } catch (e) {
       print(e);

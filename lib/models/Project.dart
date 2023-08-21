@@ -9,6 +9,9 @@ class Project {
   final int status;
   final DateTime dateTime;
   final List<String> contributorsIds;
+  late List<Task> pendingTasks;
+  late List<Task> currentTasks;
+  late List<Task> tasksCompleted;
 
   Project({
     required this.id,
@@ -20,5 +23,19 @@ class Project {
     required this.dateTime,
     required this.contributorsIds
   });
+    // Sort tasks by status
+    for(var task in tasks){
+      switch (task.status){
+        case 0:
+          pendingTasks.add(task);
+          break;
+        case 1:
+          currentTasks.add(task);
+          break;
+        default:
+          tasksCompleted.add(task);
+      }
+    }
+  }
 
 }

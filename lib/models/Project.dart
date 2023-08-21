@@ -1,4 +1,3 @@
-import 'package:project_manager/database/Database.dart';
 import 'package:project_manager/models/User.dart';
 
 import 'Task.dart';
@@ -12,6 +11,7 @@ class Project {
   final int status;
   final DateTime dateTime;
   final List<User> contributors;
+  final String bannerUrl;
 
   late List<Task> pendingTasks;
   late List<Task> currentTasks;
@@ -26,7 +26,8 @@ class Project {
     required this.tasks,
     required this.status,
     required this.dateTime,
-    required this.contributors
+    required this.contributors,
+    required this.bannerUrl
   }) {
 
     // Sort tasks by status

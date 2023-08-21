@@ -21,7 +21,8 @@ class Database {
           tasks: doc["tasks"],
           status: doc["status"],
           dateTime: doc["dateTime"],
-          contributors: doc["contributors"]
+          contributors: doc["contributors"],
+          bannerUrl: doc["bannerUrl"]
         );
       }).toList();
     });
@@ -43,6 +44,7 @@ class Database {
           status: data["status"],
           dateTime: data["dateTime"],
           contributors: data["contributors"],
+          bannerUrl: data["bannerUrl"]
         );
       } else {
         return null;
@@ -63,6 +65,7 @@ class Database {
         "status": project.status,
         "dateTime": project.dateTime,
         "contributors": project.contributors,
+        "bannerUrl": project.bannerUrl
       });
     } catch (e) {
       print(e);

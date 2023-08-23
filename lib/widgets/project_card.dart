@@ -10,7 +10,8 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return MaterialButton(onPressed: () {  },
+    child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -28,7 +29,9 @@ class ProjectCard extends StatelessWidget {
         children: [
           Expanded(flex: 11, child: Container(
             decoration: BoxDecoration(
-              color: Colors.black26,
+              gradient: LinearGradient(colors: [Colors.blueAccent, Colors.greenAccent]
+
+              ),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             ),
@@ -55,7 +58,7 @@ class ProjectCard extends StatelessWidget {
                           child: Text(
                             "Project name",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 24,
                             ),
                           ),
                         ),
@@ -64,25 +67,29 @@ class ProjectCard extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "En cours",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontStyle: FontStyle.italic
-                            ),
-                          ),
+                          child:                             Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [ Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.orangeAccent,
+                                ),
+                              ), Padding(padding: EdgeInsets.only(left: 5), child: Text("En cours", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),
                         ),
                       ),
                     ],
                   ),)
                 ]),
-          ),),
+          ),), // Banner image, Project name, Status, Progress bar
           Expanded(flex: 12, child: Padding(padding: EdgeInsets.all(20),
             child: Column(
               children: [
                 Expanded(child: Container(
                   alignment: Alignment.topLeft,
-                  child: Text("A short description."),
+                  child: Text("A short description.", style: TextStyle(fontStyle: FontStyle.normal, color: Color(0xFFB0B0B0)),),
                 )),
                 Expanded(flex: 2, child: Container(
                   child: Row(
@@ -90,6 +97,7 @@ class ProjectCard extends StatelessWidget {
                       Expanded(child: Container(
                         alignment: Alignment.centerLeft,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
                                 children: [ Container(
@@ -99,7 +107,7 @@ class ProjectCard extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     color: Colors.red,
                                   ),
-                                ), Padding(padding: EdgeInsets.only(left: 5), child: Text("12 Tâches en attentes"))]),
+                                ), Padding(padding: EdgeInsets.only(left: 5), child: Text("12 Tâches en attentes", style: TextStyle(fontStyle: FontStyle.normal),))]),
                             Row(
                                 children: [ Container(
                                   width: 10,
@@ -108,7 +116,7 @@ class ProjectCard extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     color: Colors.orangeAccent,
                                   ),
-                                ), Padding(padding: EdgeInsets.only(left: 5), child: Text("6 Tâches en cours"))]),
+                                ), Padding(padding: EdgeInsets.only(left: 5), child: Text("6 Tâches en cours", style: TextStyle(fontStyle: FontStyle.normal)))]),
                             Row(
                                 children: [ Container(
                                   width: 10,
@@ -117,25 +125,53 @@ class ProjectCard extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     color: Colors.green,
                                   ),
-                                ), Padding(padding: EdgeInsets.only(left: 5), child: Text("56 Tâches terminé"))]),
+                                ), Padding(padding: EdgeInsets.only(left: 5), child: Text("56 Tâches terminé", style: TextStyle(fontStyle: FontStyle.normal)))]),
                           ],
                         ),
-                      )),
+                      )), // Task manager
                       Expanded(child: Container(
-                        color: Colors.black12,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
+                            Text("Date limite: 22/09/12", style: TextStyle(fontStyle: FontStyle.normal)),
+                            Expanded(child: Stack(
+                              alignment: AlignmentDirectional.bottomStart,
+                              children: [
+                                Positioned(
+                                  width: 30,
+                                  height: 30,
+                                  bottom: 0,
+                                  right: 0,
+                                  child: CircleAvatar(
+                                    backgroundImage: AssetImage("assets/images/image.jpg"),
+                                    backgroundColor: Colors.lightGreen,
+                                    radius: 20,
+                                  ),
+                                ),
+                                Positioned(
+                                  width: 30,
+                                  height: 30,
+                                  right: 20,
+                                  bottom: 0,
+                                  child: CircleAvatar(
+                                    backgroundImage: AssetImage("assets/images/image.jpg"),
+                                    backgroundColor: Colors.lightGreen,
+                                    radius: 20,
+                                  ),
+                                ),
+                              ],
+                            )),
                           ],
                         ),
-                      ))
+                      )) // Limit date, members
                     ],
                   ),
                 ))
               ],
             ),
-          ))
+          )) // Description, Task, Limit date, Members
         ],
-      ),
+      )),
     );
   }
 }

@@ -28,16 +28,31 @@ class DashboardPageState extends State<DashboardPage> {
                 Expanded(child: SearchBar(), flex: 2),
                 Expanded(child: Container(child: Align(
                   alignment: Alignment.topRight,
-                  child: Icon(Icons.dashboard, size: 64,),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage("assets/images/image.jpg"),
+                      ),
+                      Text("Username")
+                    ],
+                  ),
                 ),)),
               ],
               ),
               Padding(padding: EdgeInsets.only(top: 60, bottom: 60)),
               Row(children: [
-                Padding(padding: EdgeInsets.only(right: 20),child:Text("Projects")),
-                Expanded(child: Container(height: 5, color: Colors.white,), flex: 2,)
-              ],
-              ),
+                Padding(padding: EdgeInsets.only(right: 20),child: Text("Projects", style: TextStyle(fontSize: 24),)),
+                Expanded(child: Container(height: 5, decoration: BoxDecoration(color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],),), flex: 2,)
+              ],),
               Expanded(child: CustomScrollView(
                 slivers: [
                   SliverPadding(

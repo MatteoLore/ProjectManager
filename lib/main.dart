@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         textTheme: const TextTheme(bodyMedium: TextStyle(color: Color(0xFF4D4D4D),fontFamily: "Lato")),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
@@ -46,6 +46,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  late List<Map<String, dynamic>> data;
+
+  loadData() async {
+    File file = File("user.json");
+    if (file.existsSync()) {
+      String contents = await file.readAsString();
+      data = List<Map<String, dynamic>>.from(jsonDecode(contents));
+    }
+    data = [];
+  }
+
+  _MyHomePageState() {
+    checkUser();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,5 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             )),))
     );
+  }
+
+  Future<void> saveData(List<Map<String, dynamic>> data) async {
+    File file = File("user.json");
+    String contents = jsonEncode(data);
+    await file.writeAsString(contents);
   }
 }

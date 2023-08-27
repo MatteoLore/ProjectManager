@@ -1,19 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:project_manager/models/Project.dart';
-import 'package:project_manager/models/Task.dart';
+import 'package:firedart/firedart.dart';
 import 'package:project_manager/models/User.dart';
 import 'package:project_manager/screens/dashboard.dart';
-import 'package:project_manager/screens/project.dart';
-import 'package:project_manager/widgets/addedit_project_dialog.dart';
-import 'package:project_manager/widgets/addedit_task_dialog.dart';
-import 'package:project_manager/widgets/delete_alert_dialog.dart';
-import 'package:project_manager/widgets/settings_dialog.dart';
+import 'package:project_manager/utils/utils.dart';
+
+import 'database/Database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp(name: "", options: FirebaseOptions(apiKey: apiKey, appId: appId, messagingSenderId: messagingSenderId, projectId: projectId));
   runApp(const MyApp());
 }
 
@@ -47,19 +44,41 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  late List<Map<String, dynamic>> data;
-
-  loadData() async {
-    File file = File("user.json");
-    if (file.existsSync()) {
-      String contents = await file.readAsString();
-      data = List<Map<String, dynamic>>.from(jsonDecode(contents));
-    }
-    data = [];
-  }
+  Map<String, String> data = {};
 
   _MyHomePageState() {
     checkUser();
+  }
+
+  checkUser() async {
+    await loadData();
+    var api = await initFirebase();
+    if(api == true){
+      Database db = Database();
+      User? user = await db.getUserByEmail(data["email"] as String);
+      if(user.runtimeType == User){
+        return Navigator.of(context).push(PageRouteBuilder(pageBuilder: (_, __, ___) => DashboardPage(user: user as User)));
+      }else{
+        User user = User(id: "id", username: "username", avatarUrl: "avatarUrl", projectsIds: [], ownerProjectsIds: []);
+        await db.addUser(user, data["email"] as String);
+        return Navigator.of(context).push(PageRouteBuilder(pageBuilder: (_, __, ___) => DashboardPage(user: user as User)));
+      }
+    }
+    return false;
+  }
+
+  initFirebase() async {
+    if(data.isNotEmpty){
+      FirebaseAuth.initialize(data["apiKey"] as String, VolatileStore());
+      Firestore.initialize(data['projectId'] as String);
+      var auth = FirebaseAuth.instance;
+      await auth.signIn(data["email"] as String, data["password"] as String);
+      if(auth.isSignedIn){
+        return true;
+      }
+      auth.close();
+    }
+    return false;
   }
 
 
@@ -67,6 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
+    TextEditingController _apiController = TextEditingController();
+    TextEditingController _projectController = TextEditingController();
+
     return Scaffold(
         body: Padding(padding: const EdgeInsets.all(20),
             child: Center(child: Container(width: 500, child: Column(
@@ -77,7 +99,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontFamily: "Lato",
                         fontSize: 36,
                         fontWeight: FontWeight.w700)),
+                TextField(
+                  controller: _apiController,
+                  decoration: InputDecoration(labelText: "Api key"),
+                ),
                 Padding(padding: EdgeInsets.all(10)),
+                TextField(
+                  controller: _projectController,
+                  decoration: InputDecoration(labelText: "ProjectId"),
+                ),
+                Padding(padding: EdgeInsets.all(30)),
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(labelText: "Email"),
@@ -97,11 +128,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       icon: Icon(Icons.settings),
                     ),
                     IconButton(
-                      onPressed: () {
-                        // Soumettre les données de connexion ici
+                      onPressed: () async {
                         String email = _emailController.text;
                         String password = _passwordController.text;
-                        print("Email: $email, Password: $password");
+                        String projectId = _projectController.text;
+                        String api = _apiController.text;
+                        if (Utils.isValidEmail(email)) {
+                            Map<String, String> data = {"apiKey": api, "projectId": projectId, "email": email, "password": password};
+                            saveData(data);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyHomePage()),
+                            );
+                        }
                       },
                       icon: Icon(Icons.check),
                     ),
@@ -112,9 +151,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> saveData(List<Map<String, dynamic>> data) async {
+  Future<void> saveData(Map<String, String> data) async {
     File file = File("user.json");
     String contents = jsonEncode(data);
     await file.writeAsString(contents);
   }
+
+
+  loadData() async {
+    File file = File("user.json");
+    if (file.existsSync()) {
+      String contents = await file.readAsString();
+      data = Map<String, String>.from(jsonDecode(contents));
+    }else {
+      data = {};
+    }
+  }
+
 }

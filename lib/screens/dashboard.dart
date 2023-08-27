@@ -2,15 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_manager/widgets/project_card.dart';
 
+import '../models/Project.dart';
+import '../models/User.dart';
+
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+  final User user;
+
+  const DashboardPage({super.key, required this.user});
 
   @override
-  State<DashboardPage> createState() => DashboardPageState();
+  State<DashboardPage> createState() => DashboardPageState(user: user);
 
 }
 
 class DashboardPageState extends State<DashboardPage> {
+
+  final User user;
+
+  late List<Project> projects;
+
+  DashboardPageState({required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -21,28 +32,28 @@ class DashboardPageState extends State<DashboardPage> {
           child: Column(
             children: [
               Row(children: [
-                 Expanded(child: Container(child: Align(
+                 const Expanded(child: Align(
                   alignment: Alignment.topLeft,
                   child: Icon(Icons.dashboard, size: 64,),
-                ),)),
+                )),
                 Expanded(child: SearchBar(), flex: 2),
                 Expanded(child: Container(child: Align(
                   alignment: Alignment.topRight,
                   child: Column(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         backgroundImage: AssetImage("assets/images/image.jpg"),
                       ),
-                      Text("Username")
+                      Text(user.username)
                     ],
                   ),
                 ),)),
               ],
               ),
-              Padding(padding: EdgeInsets.only(top: 60, bottom: 60)),
+              const Padding(padding: EdgeInsets.only(top: 60, bottom: 60)),
               Row(children: [
-                Padding(padding: EdgeInsets.only(right: 20),child: Text("Projects", style: TextStyle(fontSize: 24),)),
-                Expanded(child: Container(height: 5, decoration: BoxDecoration(color: Colors.white,
+                const Padding(padding: EdgeInsets.only(right: 20),child: Text("Projects", style: TextStyle(fontSize: 24),)),
+                Expanded(flex: 2,child: Container(height: 5, decoration: BoxDecoration(color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -51,14 +62,14 @@ class DashboardPageState extends State<DashboardPage> {
                       blurRadius: 5,
                       offset: Offset(0, 3),
                     ),
-                  ],),), flex: 2,)
+                  ],),),)
               ],),
               Expanded(child: CustomScrollView(
                 slivers: [
                   SliverPadding(
-                    padding: EdgeInsets.all(60),
+                    padding: const EdgeInsets.all(60),
                     sliver: SliverGrid(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 600,
                         mainAxisSpacing: 40,
                         crossAxisSpacing: 40,
@@ -66,9 +77,9 @@ class DashboardPageState extends State<DashboardPage> {
                       ),
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
-                          return ProjectCard();
+                          return ProjectCard(projectId: user.projectsIds[index]);
                         },
-                        childCount: 10,
+                        childCount: user.projectsIds.length,
                       ),
                     ),
                   ),

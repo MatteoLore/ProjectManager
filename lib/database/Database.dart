@@ -52,22 +52,21 @@ class Database {
   }
 
   Future<void> addProject(Project project) async {
+  Future<void> updateProject(Project project, String jsonTask) async {
     try {
-      await projectsCollection.add({
+      await projectsCollection.document(project.id).update({
         "authorId": project.authorId,
         "name": project.name,
         "description": project.description,
-        "tasks": project.tasks,
-        "status": project.status,
+        "tasks": jsonTask,
         "dateTime": project.dateTime,
-        "contributors": project.contributors,
+        "contributors": project.contributorsId,
         "bannerUrl": project.bannerUrl
       });
-    } catch (e) {
+    }catch (e){
       print(e);
     }
   }
-
 
   Future<List<User>> getUsers() async {
     List<Document> users = await usersCollection.orderBy("createdAt", descending: true).get();
@@ -115,6 +114,19 @@ class Database {
         "email": email
       });
     } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateUser(User user) async {
+    try {
+      await usersCollection.document(user.id).update({
+        "username": user.username,
+        "avatarUrl": user.avatarUrl,
+        "projectsIds": user.projectsIds,
+        "ownerProjectsIds": user.ownerProjectsIds,
+      });
+    }catch (e){
       print(e);
     }
   }

@@ -1,9 +1,11 @@
+import 'package:project_manager/database/Database.dart';
+
 class User {
   final String id;
-  final String username;
-  final String avatarUrl;
-  final List<String> projectsIds;
-  final List<String> ownerProjectsIds;
+  String username;
+  String avatarUrl;
+  List<String> projectsIds;
+  List<String> ownerProjectsIds;
 
   User({
     required this.id,
@@ -11,5 +13,13 @@ class User {
     required this.avatarUrl,
     required this.projectsIds,
     required this.ownerProjectsIds
-  });
+  }) {
+    projectsIds = projectsIds.toList();
+    ownerProjectsIds = ownerProjectsIds.toList();
+  }
+
+  void save() {
+    Database db = Database();
+    db.updateUser(this);
+  }
 }

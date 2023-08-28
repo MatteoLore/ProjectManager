@@ -32,6 +32,13 @@ class DashboardPageState extends State<DashboardPage> {
           showDialog(context: context, builder: (BuildContext context) {
             return AddEditProjectDialog(project: project);
           }).then((value){
+            setState(() {
+              user.ownerProjectsIds.add(project.id);
+              user.projectsIds.add(project.id);
+              user.save();
+            });
+          });
+        },
         child: const Icon(Icons.add, color: Color(0xFF78D17F),),),
         body: Padding(padding: const EdgeInsets.all(20),
           child: Column(

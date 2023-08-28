@@ -44,3 +44,5 @@ app.*.map.json
 /android/app/release
 
 user.json
+
+assets/images/image.png

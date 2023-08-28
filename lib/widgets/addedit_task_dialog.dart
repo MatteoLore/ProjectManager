@@ -5,17 +5,21 @@ class AddEditTaskDialog extends AlertDialog {
 
   final Task task;
 
-  List<Row> status = [Row(mainAxisAlignment: MainAxisAlignment.center,children: [ Container(width: 10,height: 10,decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.orangeAccent,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("En cours", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),
-    Row(mainAxisAlignment: MainAxisAlignment.center,children: [ Container(width: 10,height: 10,decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.red,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("En Attente", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),
-    Row(mainAxisAlignment: MainAxisAlignment.center,children: [ Container(width: 10,height: 10,decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.green,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("Terminé", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),];
+  List<Row> status = [
+    Row(mainAxisAlignment: MainAxisAlignment.center,children: [ Container(width: 10,height: 10,decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.red,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("In waiting", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),
+    Row(mainAxisAlignment: MainAxisAlignment.center,children: [ Container(width: 10,height: 10,decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.orangeAccent,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("In progress", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),
+    Row(mainAxisAlignment: MainAxisAlignment.center,children: [ Container(width: 10,height: 10,decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.green,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("Completed", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),];
 
   AddEditTaskDialog({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
-    Row _statusValue = status.first;
+    Row _statusValue = status[task.status];
     TextEditingController _nameController = TextEditingController();
     TextEditingController _descriptionController = TextEditingController();
+
+    _nameController.text = task.name;
+    _descriptionController.text = task.description;
     return AlertDialog(
       title: Text("Create / Edit a task"),
       content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
@@ -68,6 +72,12 @@ class AddEditTaskDialog extends AlertDialog {
             ),
             IconButton(
               onPressed: () {
+                task.name = _nameController.text;
+                task.description = _descriptionController.text;
+                task.status = status.indexOf(_statusValue);
+
+
+
                 Navigator.pop(context);
               },
               icon: Icon(Icons.check),

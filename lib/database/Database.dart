@@ -94,25 +94,19 @@ class Database {
   }
 
   Future<User?> getUserByEmail(String email) async {
-    try {
-      DocumentReference userSnapshot = usersCollection.document(email);
+    List<Document> users = await usersCollection.where("email", isEqualTo: email).get();
 
-      if (await userSnapshot.exists) {
-        Map<String, dynamic> data = await userSnapshot.get() as Map<String, dynamic>;
-        return User(
-          id: userSnapshot.id,
-          username: data["username"],
-          avatarUrl: data["avatarUrl"],
-          projectsIds: data["projectsIds"],
-          ownerProjectsIds: data["ownerProjectsIds"],
-        );
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print(e);
-      return null;
+    for(var doc in users){
+      var data = doc.map;
+      return User(
+        id: doc.id,
+        username: data["username"],
+        avatarUrl: data["avatarUrl"],
+        projectsIds: data["projectsIds"].cast<String>(),
+        ownerProjectsIds: data["ownerProjectsIds"].cast<String>(),
+      );
     }
+    return null;
   }
 
   Future<void> addUser(User user, String email) async {

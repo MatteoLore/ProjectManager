@@ -62,7 +62,23 @@ class Database {
     }
   }
 
-  Future<void> addProject(Project project) async {
+  Future<Project> addProject(String authorId) async {
+    try {
+      Document doc = await projectsCollection.add({
+        "authorId": authorId,
+        "name": "",
+        "description": "",
+        "tasks": "[{}]",
+        "dateTime": DateTime.now(),
+        "contributors": [],
+        "bannerUrl": ""
+      });
+      return Project(id: doc.id, authorId: authorId, name: "", description: "", tasks: [],  dateTime: DateTime.now(), contributorsId: [], bannerUrl: "");
+    } catch (e) {
+      return Project(id: "id", authorId: "authorId", name: "name", description: "description", tasks: [], dateTime: DateTime.now(), contributorsId: [], bannerUrl: "bannerUrl");
+    }
+  }
+
   Future<void> updateProject(Project project, String jsonTask) async {
     try {
       await projectsCollection.document(project.id).update({

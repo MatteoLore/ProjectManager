@@ -45,4 +45,19 @@ class Project {
     }
   }
 
+  void save() {
+    Database db = Database();
+
+    String jsonTask = jsonEncode(tasks.map((task) {
+      return {"name": task.name, "id": task.id, "status": task.status, "description": task.description};
+    }).toList());
+
+    db.updateProject(this, jsonTask);
+  }
+
+  static Future<Project> initialize(String authorId) async {
+    Database db = Database();
+    Project project = await db.addProject(authorId);
+    return project;
+  }
 }

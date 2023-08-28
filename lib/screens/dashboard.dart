@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_manager/widgets/addedit_project_dialog.dart';
 import 'package:project_manager/widgets/project_card.dart';
 
 import '../models/Project.dart';
@@ -26,7 +27,11 @@ class DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () {},
+        floatingActionButton: FloatingActionButton(onPressed: () async {
+          Project project = await Project.initialize(user.id);
+          showDialog(context: context, builder: (BuildContext context) {
+            return AddEditProjectDialog(project: project);
+          }).then((value){
         child: const Icon(Icons.add, color: Color(0xFF78D17F),),),
         body: Padding(padding: const EdgeInsets.all(20),
           child: Column(

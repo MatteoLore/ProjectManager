@@ -82,7 +82,7 @@ class DashboardPageState extends State<DashboardPage> {
                       ),
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
-                          return ProjectCard(projectId: user.projectsIds[index]);
+                          return ProjectCard(projectId: user.projectsIds[index], dashboard: this);
                         },
                         childCount: user.projectsIds.length,
                       ),

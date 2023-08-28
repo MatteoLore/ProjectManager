@@ -1,20 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_manager/models/Task.dart';
+import 'package:project_manager/widgets/addedit_task_dialog.dart';
 import 'package:project_manager/widgets/task_card.dart';
 
+import '../models/Project.dart';
+
 class ProjectPage extends StatefulWidget {
-  const ProjectPage({super.key});
+  final Project project;
+
+  const ProjectPage({super.key, required this.project});
 
   @override
-  State<ProjectPage> createState() => ProjectPageState();
+  State<ProjectPage> createState() => ProjectPageState(project: project);
 }
 
 class ProjectPageState extends State<ProjectPage> {
+  final Project project;
+
+  ProjectPageState({required this.project});
+
+  List<List<Widget>> status = [
+    [Container(width: 10, height: 10, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("In waiting", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))],
+    [Container(width: 10, height: 10, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orangeAccent,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("In progress", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))],
+    [Container(width: 10, height: 10, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green,),), Padding(padding: EdgeInsets.only(left: 5), child: Text("Completed", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))],
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {}, child: const Icon(Icons.add, color: Color(0xFF78D17F)),),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        var task = Task(id: "id", name: "", description: "", status: 0);
+        showDialog(context: context, builder: (BuildContext context) {
+
+          return AddEditTaskDialog(task: task);
+        }).then((value) {
+          setState(() {
+            project.tasks.add(task);
+            project.sortTask();
+            project.getStatus();
+          });
+        });
+      }, child: const Icon(Icons.add, color: Color(0xFF78D17F)),),
       body: Column(
         children: [
           Expanded(child: Container(
@@ -26,7 +53,10 @@ class ProjectPageState extends State<ProjectPage> {
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: IconButton(icon: Icon(Icons.arrow_back, size: 40), onPressed: () {  },),
+                    child: IconButton(icon: Icon(Icons.arrow_back, size: 40), onPressed: () {
+                      project.save();
+                      Navigator.pop(context);
+                    },),
                   ),
                 ),
                 Align(
@@ -47,7 +77,7 @@ class ProjectPageState extends State<ProjectPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
-                      "Project name",
+                      project.name,
                       style: TextStyle(
                         fontSize: 24,
                       ),
@@ -61,24 +91,17 @@ class ProjectPageState extends State<ProjectPage> {
                     child:                             Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: [ Container(
-                          width: 10,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.orangeAccent,
-                          ),
-                        ), Padding(padding: EdgeInsets.only(left: 5), child: Text("En cours", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16),))]),
-                  ),
+                        children: status[project.status]
+                    ),
                 ),
-              ],))
+                )],))
             ],
           ),)), // Header, banner, name, status
           Expanded(flex: 2, child: Padding(padding: EdgeInsets.all(20), child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: Text("A short descripton",)),
+                Expanded(child: Text(project.description,)),
                 Row(children: [
                   Padding(padding: EdgeInsets.only(right: 20),child: Text("Tasks", style: TextStyle(fontSize: 24),)),
                   Expanded(child: Container(height: 5, decoration: BoxDecoration(color: Colors.white,
@@ -105,9 +128,9 @@ class ProjectPageState extends State<ProjectPage> {
                         ),
                         delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
-                            return TaskCard();
+                            return TaskCard(task: project.tasks[index], project: project, page: this);
                           },
-                          childCount: 10,
+                          childCount: project.tasks.length,
                         ),
                       ),
                     ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_manager/screens/project.dart';
 
 import '../models/Project.dart';
 
@@ -19,6 +20,10 @@ class AddEditProjectDialog extends AlertDialog {
     DateTime _deadline = DateTime.now();
     TextEditingController _nameController = TextEditingController();
     TextEditingController _descriptionController = TextEditingController();
+
+    _nameController.text = project.name;
+    _descriptionController.text = project.description;
+    _deadline = project.dateTime;
     return AlertDialog(
       title: Text("Create / Edit a project"),
       content: StatefulBuilder(
@@ -62,7 +67,7 @@ class AddEditProjectDialog extends AlertDialog {
                             });
                           }
                         },
-                        child: Text("Sélectionner une image"),
+                        child: Text("Select a banner image"),
                       ),
                     ],
                   ),),
@@ -72,17 +77,17 @@ class AddEditProjectDialog extends AlertDialog {
                         TextField(
                           controller: _nameController,
                           decoration: InputDecoration(
-                              labelText: "Nom du projet"),
+                              labelText: "Project name"),
                         ),
                         Padding(padding: EdgeInsets.all(10)),
                         TextField(
                           controller: _descriptionController,
-                          decoration: InputDecoration(labelText: "Description"),
+                          decoration: InputDecoration(labelText: "Project description"),
                         ),
                         Padding(padding: EdgeInsets.all(10)),
                         Row(
                           children: [
-                            Text("Date limite:"),
+                            Text("Deadline: "),
                             Padding(padding: EdgeInsets.all(10)),
                             ElevatedButton(
                                 onPressed: () async {
@@ -115,15 +120,18 @@ class AddEditProjectDialog extends AlertDialog {
       children: [
         IconButton(
           onPressed: () {
-            Navigator.pop(context); // Bouton pour revenir en arrière
+            Navigator.pop(context); // back button
           },
           icon: Icon(Icons.arrow_back),
         ),
         IconButton(
           onPressed: () {
-            // Ajoutez ici le code pour soumettre les données
-            // ...
-            Navigator.pop(context); // Bouton pour fermer la boîte de dialogue après la soumission
+            project.name = _nameController.text;
+            project.description = _descriptionController.text;
+            project.dateTime = _deadline;
+            project.save();
+            Navigator.pop(context);
+            Navigator.of(context).push(PageRouteBuilder(pageBuilder: (_, __, ___) => ProjectPage(project: project,)));
           },
           icon: Icon(Icons.check),
         ),

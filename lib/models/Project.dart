@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+import 'package:project_manager/database/Database.dart';
 import 'package:project_manager/models/User.dart';
 
 import 'Task.dart';
@@ -29,8 +31,18 @@ class Project {
     required this.contributorsId,
     required this.bannerUrl
   }) {
+    tasks = tasks.toList();
+    contributorsId = contributorsId.toList();
 
-    // Sort tasks by status
+
+    sortTask();
+    getStatus();
+  }
+
+  void sortTask() {
+    pendingTasks.clear();
+    tasksCompleted.clear();
+    currentTasks.clear();
     for(var task in tasks){
       switch (task.status){
         case 0:
@@ -41,6 +53,20 @@ class Project {
           break;
         default:
           tasksCompleted.add(task);
+      }
+    }
+  }
+
+  void getStatus() {
+    if(tasks.isNotEmpty){
+      if (tasksCompleted.length == tasks.length) {
+        status = 2;
+      } else {
+        if(pendingTasks.length != tasks.length){
+          status = 1;
+        }else {
+          status = 0;
+        }
       }
     }
   }
@@ -60,4 +86,5 @@ class Project {
     Project project = await db.addProject(authorId);
     return project;
   }
+
 }

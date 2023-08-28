@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:project_manager/models/User.dart';
 
 import 'Task.dart';
@@ -5,17 +6,17 @@ import 'Task.dart';
 class Project {
   final String id;
   final String authorId;
-  final String name;
-  final String description;
-  final List<Task> tasks;
-  final int status;
-  final DateTime dateTime;
-  final List<User> contributors;
-  final String bannerUrl;
+  String name;
+  String description;
+  List<Task> tasks;
+  DateTime dateTime;
+  List<String> contributorsId;
+  String bannerUrl;
 
-  late List<Task> pendingTasks;
-  late List<Task> currentTasks;
-  late List<Task> tasksCompleted;
+  List<Task> pendingTasks = [];
+  List<Task> currentTasks = [];
+  List<Task> tasksCompleted = [];
+  int status = 0;
 
 
   Project({
@@ -24,9 +25,8 @@ class Project {
     required this.name,
     required this.description,
     required this.tasks,
-    required this.status,
     required this.dateTime,
-    required this.contributors,
+    required this.contributorsId,
     required this.bannerUrl
   }) {
 

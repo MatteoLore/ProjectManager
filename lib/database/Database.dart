@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:firedart/firedart.dart';
+import 'package:project_manager/models/Task.dart';
 
 import '../models/Project.dart';
 import '../models/User.dart';
@@ -6,6 +9,15 @@ import '../models/User.dart';
 class Database {
   final CollectionReference projectsCollection = Firestore.instance.collection("projects");
   final CollectionReference usersCollection = Firestore.instance.collection("users");
+
+  List<Task> convertToTask(String json) {
+    List<Map<String, dynamic>> taskListData = (jsonDecode(json) as List)
+        .map((item) => item as Map<String, dynamic>)
+        .toList();
+    return taskListData.map((taskData) {
+      return Task(id: taskData["id"], name: taskData["name"], description: taskData["description"], status: taskData["status"] as int);
+    }).toList();
+  }
 
   Future<List<Project>> getProjects() async {
     List<Document> projects = await projectsCollection.orderBy("createdAt", descending: true).get();
@@ -16,10 +28,9 @@ class Database {
           authorId: data["authorId"],
           name: data["authorId"],
           description: data["description"],
-          tasks: data["tasks"],
-          status: data["status"],
+          tasks: convertToTask(data["tasks"]),
           dateTime: data["dateTime"],
-          contributors: data["contributors"],
+          contributorsId: data["contributors"],
           bannerUrl: data["bannerUrl"]
         );
       }).toList();
@@ -30,16 +41,16 @@ class Database {
       DocumentReference projectSnapshot = projectsCollection.document(projectId);
 
       if (await projectSnapshot.exists) {
-        Map<String, dynamic> data = await projectSnapshot.get() as Map<String, dynamic>;
+        Document document = await projectSnapshot.get();
+        Map<String, dynamic> data = document.map;
         return Project(
           id: projectSnapshot.id,
           authorId: data["authorId"],
           name: data["name"],
           description: data["description"],
-          tasks: data["tasks"],
-          status: data["status"],
+          tasks: convertToTask(data["tasks"]),
           dateTime: data["dateTime"],
-          contributors: data["contributors"],
+          contributorsId: data["contributors"].cast<String>(),
           bannerUrl: data["bannerUrl"]
         );
       } else {

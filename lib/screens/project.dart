@@ -68,6 +68,11 @@ class ProjectPageState extends State<ProjectPage> {
                       children: [
                         IconButton(icon: Icon(Icons.supervised_user_circle_outlined, size: 40,), onPressed: () {  }, ),
                         IconButton(icon: Icon(Icons.delete, size: 40,), onPressed: () {  },),
+                        IconButton(icon: Icon(Icons.delete, size: 40,), onPressed: () {
+                          showDialog(context: context, builder: (BuildContext context) {
+                            return DeleteAlertDialog(object: project,);
+                          });
+                        },),
                       ],
                     ),
                   ),

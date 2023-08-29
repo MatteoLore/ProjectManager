@@ -81,6 +81,11 @@ class Project {
     db.updateProject(this, jsonTask);
   }
 
+  void delete() {
+    Database db = Database();
+    db.removeProject(id);
+  }
+
   static Future<Project> initialize(String authorId) async {
     Database db = Database();
     Project project = await db.addProject(authorId);

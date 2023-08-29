@@ -17,6 +17,7 @@ class DeleteAlertDialog extends AlertDialog {
         Project project = object as Project;
         type = "project";
         name = project.name;
+        delete = project.delete();
         break;
       case Task:
         Task task = object as Task;

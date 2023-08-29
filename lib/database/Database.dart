@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:firedart/firedart.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:project_manager/models/Task.dart';
 
@@ -94,6 +97,10 @@ class Database {
     }catch (e){
       print(e);
     }
+  }
+
+  Future<void> removeProject(String projectId) async {
+    await projectsCollection.document(projectId).delete();
   }
 
   Future<List<User>> getUsers() async {

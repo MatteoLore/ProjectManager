@@ -16,6 +16,8 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   firedart: ^0.9.7
+  mime: ^1.0.4
+
 
 dev_dependencies:
   flutter_test:
@@ -28,7 +30,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/images/logo.png
 
   fonts:
     - family: Lato

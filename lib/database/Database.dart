@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firedart/firedart.dart';
+import 'package:mime/mime.dart';
 import 'package:project_manager/models/Task.dart';
 
 import '../models/Project.dart';
@@ -152,4 +153,15 @@ class Database {
     }
   }
 
+  Future<void> uploadImage(XFile imageFile, String id, String type) async {
+    //...
+  }
+
+  String getMimeType(XFile file) {
+    final mimeTypeData = lookupMimeType(file.path, headerBytes: [0xFF, 0xD8]);
+    if (mimeTypeData != null) {
+      return mimeTypeData;
+    }
+    return 'image/jpeg';
+  }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_manager/models/Task.dart';
+import 'package:project_manager/widgets/addedit_project_dialog.dart';
 import 'package:project_manager/widgets/addedit_task_dialog.dart';
+import 'package:project_manager/widgets/delete_alert_dialog.dart';
 import 'package:project_manager/widgets/task_card.dart';
 
 import '../models/Project.dart';
@@ -67,7 +69,13 @@ class ProjectPageState extends State<ProjectPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(icon: Icon(Icons.supervised_user_circle_outlined, size: 40,), onPressed: () {  }, ),
-                        IconButton(icon: Icon(Icons.delete, size: 40,), onPressed: () {  },),
+                        IconButton(icon: Icon(Icons.edit, size: 40,), onPressed: () {
+                          showDialog(context: context, builder: (BuildContext context) {
+                            return AddEditProjectDialog(project: project, action: "update",);
+                          }).then((value){
+                            setState(() {});
+                          });
+                        }, ),
                         IconButton(icon: Icon(Icons.delete, size: 40,), onPressed: () {
                           showDialog(context: context, builder: (BuildContext context) {
                             return DeleteAlertDialog(object: project,);

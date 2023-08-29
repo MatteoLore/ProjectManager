@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_manager/database/Database.dart';
 import 'package:project_manager/screens/project.dart';
 
 import '../models/Project.dart';
@@ -9,9 +10,10 @@ import '../models/Project.dart';
 class AddEditProjectDialog extends AlertDialog {
 
   final Project project;
+  final String action;
   XFile? _selectedImage;
 
-  AddEditProjectDialog({super.key, required this.project});
+  AddEditProjectDialog({super.key, required this.project, required this.action});
 
 
   @override
@@ -62,6 +64,8 @@ class AddEditProjectDialog extends AlertDialog {
                           );
 
                           if (pickedImage != null) {
+                            Database db = Database();
+                            db.uploadImage(pickedImage, project.id, "banner");
                             setState(() {
                               _selectedImage = pickedImage;
                             });
@@ -131,8 +135,13 @@ class AddEditProjectDialog extends AlertDialog {
             project.dateTime = _deadline;
             project.save();
             Navigator.pop(context);
-            Navigator.of(context).push(PageRouteBuilder(pageBuilder: (_, __, ___) => ProjectPage(project: project,)));
-          },
+            if(action == "create"){
+                  Navigator.of(context).push(PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => ProjectPage(
+                            project: project,
+                          )));
+                }
+              },
           icon: Icon(Icons.check),
         ),
       ],

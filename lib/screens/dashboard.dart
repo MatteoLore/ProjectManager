@@ -30,7 +30,7 @@ class DashboardPageState extends State<DashboardPage> {
         floatingActionButton: FloatingActionButton(onPressed: () async {
           Project project = await Project.initialize(user.id);
           showDialog(context: context, builder: (BuildContext context) {
-            return AddEditProjectDialog(project: project);
+            return AddEditProjectDialog(project: project, action: "create",);
           }).then((value){
             setState(() {
               user.ownerProjectsIds.add(project.id);

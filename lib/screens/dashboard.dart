@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_manager/widgets/addedit_project_dialog.dart';
 import 'package:project_manager/widgets/project_card.dart';
+import 'package:project_manager/widgets/settings_dialog.dart';
 
 import '../models/Project.dart';
 import '../models/User.dart';
@@ -44,22 +45,35 @@ class DashboardPageState extends State<DashboardPage> {
           child: Column(
             children: [
               Row(children: [
-                 const Expanded(child: Align(
+                  Expanded(child: Align(
                   alignment: Alignment.topLeft,
-                  child: Icon(Icons.dashboard, size: 64,),
+                  child: ImageIcon(AssetImage("assets/images/logo.png"), size: 140,)
                 )),
-                Expanded(child: SearchBar(), flex: 2),
-                Expanded(child: Container(child: Align(
+                const Expanded(child: SearchBar(), flex: 2),
+                Expanded(child: Align(
                   alignment: Alignment.topRight,
                   child: Column(
                     children: [
-                      const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/image.jpg"),
+                      InkWell(
+                        onTap: () {
+                          showDialog(context: context, builder: (BuildContext context) {
+                            return SettingsDialog(user: user);
+                          }).then((value){
+                            setState(() {
+                            });
+                          });
+                        },
+                        child: CircleAvatar(
+                          foregroundImage: Image.asset("assets/images/image.png").image,
+                          backgroundColor: Colors.grey,
+                          radius: 30,
+                        ),
                       ),
+                      Padding(padding: EdgeInsets.all(5)),
                       Text(user.username)
                     ],
                   ),
-                ),)),
+                )),
               ],
               ),
               const Padding(padding: EdgeInsets.only(top: 60, bottom: 60)),

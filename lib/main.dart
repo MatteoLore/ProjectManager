@@ -121,12 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Padding(padding: EdgeInsets.all(30)),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.settings),
-                    ),
                     IconButton(
                       onPressed: () async {
                         String email = _emailController.text;
